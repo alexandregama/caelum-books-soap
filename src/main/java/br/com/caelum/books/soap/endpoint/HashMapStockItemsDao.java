@@ -1,6 +1,8 @@
 package br.com.caelum.books.soap.endpoint;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.ejb.Stateless;
 
@@ -20,6 +22,15 @@ public class HashMapStockItemsDao implements StockItems {
 	@Override
 	public StockItem getByCode(String code) {
 		return itens.get(code);
+	}
+
+	@Override
+	public List<StockItem> getByListCode(List<String> codes) {
+		List<StockItem> items = new ArrayList<StockItem>();
+		for (String code : codes) {
+			items.add(itens.get(code));
+		}
+		return items;
 	}
 	
 }
