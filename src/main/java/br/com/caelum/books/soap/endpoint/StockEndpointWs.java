@@ -9,25 +9,37 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
+import br.com.caelum.books.soap.exception.AuthorizationException;
+import br.com.caelum.books.soap.token.Tokens;
+
 @Stateless
-@WebService
+@WebService(targetNamespace = "http://caelum.com.br/stockws/v1")
 public class StockEndpointWs {
 
 	@Inject
 	private StockItems stock;
+	
+	@Inject
+	private Tokens tokens;
 	
 	public StockEndpointWs() {
 	}
 	
 	@WebMethod(operationName = "itemByCode")
 	@WebResult(name = "stockItem")
-	public StockItem getByCode(@WebParam(name = "code") String code) {
+	public StockItem getByCode(@WebParam(name = "token") String token, @WebParam(name = "code") String code) throws AuthorizationException {
+		if (!tokens.isValid(token)) {
+			throw new AuthorizationException("Token is invalid");
+		}
 		return stock.getByCode(code);
 	}
 	
 	@WebMethod(operationName = "itemsByCode")
 	@WebResult(name = "stockItems")
-	public List<StockItem> getItemsByCode(@WebParam(name = "code") List<String> codes) {
+	public List<StockItem> getItemsByCode(@WebParam(name = "token", header = true) String token, @WebParam(name = "code") List<String> codes) throws AuthorizationTokenException {
+		if (!tokens.isValid(token)) {
+			throw new AuthorizationTokenException("Token is invalid");
+		}
 		return stock.getByListCode(codes);
 	}
 	
