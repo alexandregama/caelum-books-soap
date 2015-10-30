@@ -43,4 +43,10 @@ public class StockEndpointWs {
 		return stock.getByListCode(codes);
 	}
 	
+	@WebMethod(operationName = "item")
+	@WebResult(name = "returnedItem", targetNamespace="returnedItemResponse")
+	public StockItem getItemByCode(@WebParam(name = "code") String code) {
+		return stock.getByCode(code);
+	}
+	
 }
